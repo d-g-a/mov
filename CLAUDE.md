@@ -7,6 +7,7 @@ Next.js (App Router) site for LA MOVIDA, a Latin electronic music collective in 
 - **Every change reaches `main` through a branch and a pull request.** Never commit or push directly to `main`, and never merge into `main` locally.
 - Create a branch from the latest `main` for each change, push it, and open a PR. Merge only through the PR.
 - Never force-push to `main` or rewrite its history.
+- Never add a `Co-Authored-By: Claude …` line to commit messages.
 
 ## Commands
 

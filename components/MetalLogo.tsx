@@ -23,6 +23,8 @@ const TILT_X = 0.35; // max pitch toward pointer
 const SPIN_PER_PX = 0.012; // drag sensitivity
 const FRICTION = 2.2; // spin velocity decay per second
 const IDLE_AFTER = 3; // seconds without input before idle sway
+const WARM_TINT = 0xffd6e4; // pale pink: reflected room lights + key light
+const CURSOR_TINT = 0xffbcd6; // a touch stronger: cursor light + click flash
 
 export default function MetalLogo() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -49,19 +51,26 @@ export default function MetalLogo() {
 
     const scene = new THREE.Scene();
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    // Tint the room's light panels so the chrome reflects a warm pink glow
+    const room = new RoomEnvironment();
+    room.traverse((o) => {
+      const m = (o as THREE.Mesh).material;
+      if (m instanceof THREE.MeshLambertMaterial) m.emissive.set(WARM_TINT);
+    });
+    const envTex = pmrem.fromScene(room, 0.04).texture;
+    room.dispose();
     scene.environment = envTex;
 
     const camera = new THREE.PerspectiveCamera(32, 1, 1, 6000);
 
     // ---------- Lights ----------
-    const key = new THREE.DirectionalLight(0xffffff, 1.2);
+    const key = new THREE.DirectionalLight(WARM_TINT, 1.2);
     key.position.set(400, 600, 800);
     const rimWarm = new THREE.DirectionalLight(0xff5a4a, 0.9);
     rimWarm.position.set(-700, -200, -400);
     const rimCool = new THREE.DirectionalLight(0x5aa8ff, 0.6);
     rimCool.position.set(700, -300, -300);
-    const cursorLight = new THREE.PointLight(0xffffff, 0, 0, 0); // intensity driven by pointer
+    const cursorLight = new THREE.PointLight(CURSOR_TINT, 0, 0, 0); // intensity driven by pointer
     cursorLight.position.set(0, 0, 420);
     scene.add(key, rimWarm, rimCool, cursorLight);
 

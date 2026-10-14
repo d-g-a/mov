@@ -1,0 +1,108 @@
+/* Sits centered just below the logo; --logo-half-height is set by MetalLogo. */
+.form {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--logo-half-height, 22vh) + 28px);
+  transform: translateX(-50%);
+  width: min(320px, calc(100% - 32px));
+  z-index: 1;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(230, 232, 236, 0.14);
+  transition: border-color 0.3s;
+}
+
+.field:hover,
+.field:focus-within {
+  border-color: rgba(230, 232, 236, 0.4);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--fg);
+  font: inherit;
+  text-align: center;
+}
+
+.input::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.input:focus::placeholder {
+  opacity: 0.4;
+}
+
+.submit {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-right: -8px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.submit:hover,
+.submit:focus-visible {
+  color: var(--fg);
+  transform: translateX(2px);
+}
+
+.submit:focus-visible {
+  outline: 1px solid rgba(230, 232, 236, 0.4);
+  outline-offset: 2px;
+}
+
+.form[data-state="sending"] .submit {
+  opacity: 0.4;
+}
+
+.message {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.form[data-state="done"] .message {
+  color: var(--fg);
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* iOS zooms into inputs under 16px */
+@media (pointer: coarse) {
+  .input {
+    font-size: 16px;
+  }
+}

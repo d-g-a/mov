@@ -137,9 +137,13 @@ export default function MetalLogo() {
       const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
       const byWidth = size.x / 2 / 0.8 / (tanHalf * camera.aspect); // logo fills ~80% of width
       const byHeight = size.y / 2 / 0.45 / tanHalf; // and at most ~45% of height
-      camera.position.set(0, 0, Math.max(byWidth, byHeight));
+      const distance = Math.max(byWidth, byHeight);
+      camera.position.set(0, 0, distance);
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
+      // Expose the logo's on-screen half height so the page can place things below it
+      const halfHeightPx = (size.y / 2 / (tanHalf * distance)) * (h / 2);
+      mount.parentElement?.style.setProperty("--logo-half-height", `${halfHeightPx}px`);
     };
     fitCamera();
     const ro = new ResizeObserver(fitCamera);

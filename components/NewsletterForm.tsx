@@ -57,7 +57,7 @@ export default function NewsletterForm() {
           required
           autoComplete="email"
           inputMode="email"
-          placeholder="Newsletter — your email"
+          placeholder="Newsletter"
           className={styles.input}
           disabled={state === "sending"}
         />

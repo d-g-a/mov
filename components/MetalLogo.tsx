@@ -25,8 +25,8 @@ const TILT_X = 0.35; // max pitch toward pointer
 const SPIN_PER_PX = 0.012; // drag sensitivity
 const FRICTION = 2.2; // spin velocity decay per second
 const IDLE_AFTER = 3; // seconds without input before idle sway
-const WARM_TINT = 0xffd6e4; // pale pink: reflected room lights + key light
-const CURSOR_TINT = 0xffbcd6; // a touch stronger: cursor light + click flash
+const WARM_TINT = 0xffc4d9; // pale pink: reflected room lights + key light
+const CURSOR_TINT = 0xffa3c6; // a touch stronger: cursor light + click flash
 const ROUNDING = { radius: 14, height: 3.5 }; // rounded profile of the faces, in SVG units
 const LETTER_ROUNDING = 0.25; // letters' rounding relative to the ring (1 = same)
 

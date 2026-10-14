@@ -1,0 +1,18 @@
+:root {
+  --bg: #000;
+  --fg: #e6e8ec;
+  --muted: #6b6e76;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  overscroll-behavior: none;
+}

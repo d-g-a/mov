@@ -1,9 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+const title = "LA MOVIDA";
+const description = "Musiques électroniques d'Amérique Latine";
+
+// The share image comes from app/opengraph-image.png and app/twitter-image.png
+// (Next.js adds those tags itself). On Vercel the absolute URLs use the
+// production domain automatically.
 export const metadata: Metadata = {
-  title: "LA MOVIDA",
-  description: "Musiques électroniques d'Amérique Latine",
+  title,
+  description,
+  applicationName: title,
+  openGraph: {
+    type: "website",
+    siteName: title,
+    title,
+    description,
+    locale: "fr_FR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export const viewport: Viewport = {

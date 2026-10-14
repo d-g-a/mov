@@ -27,7 +27,7 @@ const FRICTION = 2.2; // spin velocity decay per second
 const IDLE_AFTER = 3; // seconds without input before idle sway
 const WARM_TINT = 0xffd6e4; // pale pink: reflected room lights + key light
 const CURSOR_TINT = 0xffbcd6; // a touch stronger: cursor light + click flash
-const ROUNDING = { radius: 24, height: 9 }; // rounded profile of the faces, in SVG units
+const ROUNDING = { radius: 14, height: 3.5 }; // rounded profile of the faces, in SVG units
 
 export default function MetalLogo() {
   const mountRef = useRef<HTMLDivElement>(null);

@@ -48,7 +48,7 @@ export default function NewsletterForm() {
   return (
     <form className={styles.form} onSubmit={onSubmit} data-state={state}>
       <label htmlFor="newsletter-email" className={styles.srOnly}>
-        Email address for the LA MOVIDA newsletter
+        Email address for the LAMOVIDA newsletter
       </label>
       <div className={styles.field}>
         <input

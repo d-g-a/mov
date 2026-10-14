@@ -1,6 +1,6 @@
-# LA MOVIDA — site
+# LAMOVIDA — site
 
-Next.js (App Router) site for LA MOVIDA. The landing page is the collective's logo, extruded in chrome on a black stage, rendered with three.js.
+Next.js (App Router) site for LAMOVIDA. The landing page is the collective's logo, extruded in chrome on a black stage, rendered with three.js.
 
 ## Run it
 

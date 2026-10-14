@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const title = "LA MOVIDA";
+const title = "LAMOVIDA";
 const description = "Musiques électroniques d'Amérique Latine";
 
 // The share image comes from app/opengraph-image.png and app/twitter-image.png

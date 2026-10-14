@@ -2,7 +2,7 @@
 .form {
   position: absolute;
   left: 50%;
-  top: calc(50% + var(--logo-half-height, 22vh) + 28px);
+  top: calc(50% + var(--logo-half-height, 22vh) + clamp(72px, 14vh, 140px));
   transform: translateX(-50%);
   width: min(320px, calc(100% - 32px));
   z-index: 1;

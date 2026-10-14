@@ -25,6 +25,8 @@ export interface RoundedNormalMapOptions {
   height?: number;
   /** Smoothing radius applied to the height field, in SVG units. */
   blur?: number;
+  /** Per-path multiplier on `height` (0–2), by the path's order in the SVG. Defaults to 1. */
+  heightScale?: (pathIndex: number) => number;
 }
 
 export function createRoundedNormalMap(svgText: string, options: RoundedNormalMapOptions): THREE.DataTexture {
@@ -44,9 +46,13 @@ export function createRoundedNormalMap(svgText: string, options: RoundedNormalMa
   canvas.height = H;
   const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
   ctx.setTransform(resolution, 0, 0, resolution, -x0 * resolution, -y0 * resolution);
-  ctx.fillStyle = "#fff";
+  // Red channel carries each path's height scale (0–2 mapped to 0–255).
   const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
-  doc.querySelectorAll("path").forEach((p) => ctx.fill(new Path2D(p.getAttribute("d") ?? "")));
+  doc.querySelectorAll("path").forEach((p, i) => {
+    const scale = Math.min(Math.max(options.heightScale?.(i) ?? 1, 0), 2);
+    ctx.fillStyle = `rgb(${Math.round((scale / 2) * 255)}, 0, 0)`;
+    ctx.fill(new Path2D(p.getAttribute("d") ?? ""));
+  });
   const pixels = ctx.getImageData(0, 0, W, H).data;
 
   // 2. Distance (in texels) from each inside texel to the nearest outside texel.
@@ -60,7 +66,8 @@ export function createRoundedNormalMap(svgText: string, options: RoundedNormalMa
   for (let i = 0; i < W * H; i++) {
     if (dist[i] === 0) continue;
     const t = Math.min(Math.sqrt(dist[i]) / resolution / radius, 1);
-    field[i] = height * (1 - (1 - t) * (1 - t));
+    const scale = (pixels[i * 4] / 255) * 2;
+    field[i] = scale * height * (1 - (1 - t) * (1 - t));
   }
   const r = Math.max(1, Math.round(blur * resolution));
   boxBlur(field, W, H, r);

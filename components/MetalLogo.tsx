@@ -28,6 +28,7 @@ const IDLE_AFTER = 3; // seconds without input before idle sway
 const WARM_TINT = 0xffd6e4; // pale pink: reflected room lights + key light
 const CURSOR_TINT = 0xffbcd6; // a touch stronger: cursor light + click flash
 const ROUNDING = { radius: 14, height: 3.5 }; // rounded profile of the faces, in SVG units
+const LETTER_ROUNDING = 0.45; // letters' rounding relative to the ring (1 = same)
 
 export default function MetalLogo() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -117,6 +118,7 @@ export default function MetalLogo() {
     const normalMap = createRoundedNormalMap(LOGO_SVG, {
       bounds: [box.min.x, box.min.y, box.max.x, box.max.y],
       ...ROUNDING,
+      heightScale: (i) => (i === 0 ? 1 : LETTER_ROUNDING), // path 0 is the ring
     });
     capMaterial.normalMap = normalMap;
     for (const g of geometries) g.translate(-center.x, -center.y, -depth / 2);

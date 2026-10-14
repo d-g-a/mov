@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "LA MOVIDA",
-  description: "LA MOVIDA — Latin electronic music collective, Paris.",
+  description: "Musiques électroniques d'Amérique Latine",
 };
 
 export const viewport: Viewport = {

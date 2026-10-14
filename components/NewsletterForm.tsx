@@ -9,6 +9,7 @@ const MESSAGES: Record<string, string> = {
   pending: "Check your inbox to confirm.",
   subscribed: "You’re on the list.",
   already: "You’re already on the list.",
+  unsubscribed: "This email unsubscribed earlier, so it can’t be re-added here.",
   invalid_email: "That email doesn’t look right.",
   default: "Couldn’t sign you up. Try again in a moment.",
 };

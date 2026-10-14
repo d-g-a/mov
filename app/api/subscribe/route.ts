@@ -6,10 +6,10 @@ import { createHash } from "node:crypto";
  * Env:
  * - MAILCHIMP_API_KEY       (secret; ends in the data center, e.g. "…-us21")
  * - MAILCHIMP_AUDIENCE_ID   (Audience → Settings → Audience name and defaults)
- * - MAILCHIMP_DOUBLE_OPT_IN "false" adds people directly; anything else sends a confirmation email first
+ * - MAILCHIMP_DOUBLE_OPT_IN "true" sends a confirmation email first; otherwise people are added directly
  * - MAILCHIMP_TAG           optional tag added to each signup, e.g. "website"
  *
- * Responds with { status: "pending" | "subscribed" | "already" } or { error: string }.
+ * Responds with { status: "pending" | "subscribed" | "already" | "unsubscribed" } or { error: string }.
  */
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   // Honeypot: real visitors never see or fill this field
   if (typeof body.company === "string" && body.company !== "") {
-    return Response.json({ status: "pending" });
+    return Response.json({ status: "subscribed" });
   }
 
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
@@ -39,7 +39,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "invalid_email" }, { status: 400 });
   }
 
-  const doubleOptIn = process.env.MAILCHIMP_DOUBLE_OPT_IN !== "false";
+  // Single opt-in by default. The audience's "double opt-in" setting in Mailchimp
+  // only affects Mailchimp's hosted forms; via the API, the status we send decides.
+  const doubleOptIn = process.env.MAILCHIMP_DOUBLE_OPT_IN === "true";
   const memberUrl = `https://${dataCenter}.api.mailchimp.com/3.0/lists/${audienceId}/members/${createHash("md5").update(email).digest("hex")}`;
   const headers = {
     Authorization: `Basic ${Buffer.from(`lamovida:${apiKey}`).toString("base64")}`,
@@ -54,13 +56,21 @@ export async function POST(request: Request) {
       headers,
       body: JSON.stringify({ email_address: email, status_if_new: doubleOptIn ? "pending" : "subscribed" }),
     });
-    const member = (await res.json()) as { status?: string; title?: string };
+    let member = (await res.json()) as { status?: string; title?: string };
 
     if (!res.ok) {
       // Mailchimp rejects fake-looking or blocked addresses with 400 "Invalid Resource"
       if (res.status === 400) return Response.json({ error: "invalid_email" }, { status: 400 });
       console.error("Mailchimp error", res.status, member.title);
       return Response.json({ error: "upstream" }, { status: 502 });
+    }
+
+    // Someone who signed up earlier and never confirmed stays "pending" (status_if_new
+    // doesn't touch existing contacts). With single opt-in, subscribe them now.
+    if (!doubleOptIn && member.status === "pending") {
+      const patch = await fetch(memberUrl, { method: "PATCH", headers, body: JSON.stringify({ status: "subscribed" }) });
+      if (patch.ok) member = (await patch.json()) as typeof member;
+      else console.error("Mailchimp pending -> subscribed failed", patch.status);
     }
 
     const tag = process.env.MAILCHIMP_TAG;
@@ -72,6 +82,10 @@ export async function POST(request: Request) {
       }).catch((e) => console.error("Mailchimp tag error", e));
     }
 
+    if (member.status === "unsubscribed" || member.status === "cleaned") {
+      // Opted out (or bounced) earlier: we don't re-add them from here
+      return Response.json({ status: "unsubscribed" });
+    }
     if (member.status === "subscribed" && doubleOptIn) {
       // With double opt-in, a new contact comes back "pending"; "subscribed" means they already were
       return Response.json({ status: "already" });

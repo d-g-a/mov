@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const title = "LAMOVIDA";
+const name = "LAMOVIDA";
 const description = "Musiques électroniques d'Amérique Latine";
+const title = `${name} | ${description}`;
 
 // The share image comes from app/opengraph-image.png and app/twitter-image.png
 // (Next.js adds those tags itself). On Vercel the absolute URLs use the
@@ -10,10 +11,10 @@ const description = "Musiques électroniques d'Amérique Latine";
 export const metadata: Metadata = {
   title,
   description,
-  applicationName: title,
+  applicationName: name,
   openGraph: {
     type: "website",
-    siteName: title,
+    siteName: name,
     title,
     description,
     locale: "fr_FR",

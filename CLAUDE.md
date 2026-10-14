@@ -24,4 +24,5 @@ npm run build    # run before pushing; it also typechecks
 
 ## Notes
 
-- Build logo shapes with `SVGLoader.createShapes(path)`, not `path.toShapes()`. `toShapes()` can invert holes, which fills in the ring's center and the counters of O, D and A.
+- Logo shapes come from `path.toShapes()`, which handles the SVG's holes correctly on three.js 0.186 (`SVGLoader.createShapes()` is deprecated there). Older three.js versions, e.g. 0.160, invert the holes and fill in the ring's center and the insides of O, D and A, so check this after any three.js downgrade.
+- The rounded chrome look comes from `lib/roundedNormalMap.ts`: a normal map built from the logo's distance field, applied to the front and back faces. Tune it with `ROUNDING` in `MetalLogo.tsx` (`radius` = width of the rounded shoulder, `height` = how pronounced it is).

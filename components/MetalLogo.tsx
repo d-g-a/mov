@@ -4,7 +4,9 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { LOGO_SVG } from "@/lib/logo";
+import { createRoundedNormalMap } from "@/lib/roundedNormalMap";
 
 /**
  * Chrome-extruded LA MOVIDA logo on a black stage.
@@ -25,6 +27,7 @@ const FRICTION = 2.2; // spin velocity decay per second
 const IDLE_AFTER = 3; // seconds without input before idle sway
 const WARM_TINT = 0xffd6e4; // pale pink: reflected room lights + key light
 const CURSOR_TINT = 0xffbcd6; // a touch stronger: cursor light + click flash
+const ROUNDING = { radius: 24, height: 9 }; // rounded profile of the faces, in SVG units
 
 export default function MetalLogo() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -57,7 +60,8 @@ export default function MetalLogo() {
       const m = (o as THREE.Mesh).material;
       if (m instanceof THREE.MeshLambertMaterial) m.emissive.set(WARM_TINT);
     });
-    const envTex = pmrem.fromScene(room, 0.04).texture;
+    // 512 (default 256) so large mirror-like areas don't show blocky reflections
+    const envTex = pmrem.fromScene(room, 0.04, 0.1, 100, { size: 512 }).texture;
     room.dispose();
     scene.environment = envTex;
 
@@ -83,6 +87,8 @@ export default function MetalLogo() {
       clearcoatRoughness: 0.03,
       envMapIntensity: 1.25,
     });
+    // Front/back faces get a normal map that makes them read as rounded metal
+    const capMaterial = material.clone();
 
     // ---------- Geometry from SVG ----------
     const svg = new SVGLoader().parse(LOGO_SVG);
@@ -98,15 +104,21 @@ export default function MetalLogo() {
     const logo = new THREE.Group();
     const geometries: THREE.BufferGeometry[] = [];
     for (const path of svg.paths) {
-      for (const shape of SVGLoader.createShapes(path)) {
+      for (const shape of path.toShapes()) {
         const g = new THREE.ExtrudeGeometry(shape, extrude);
+        smoothSides(g);
         geometries.push(g);
-        logo.add(new THREE.Mesh(g, material));
+        logo.add(new THREE.Mesh(g, [capMaterial, material])); // groups: 0 = faces, 1 = sides
       }
     }
     const box = new THREE.Box3().setFromObject(logo);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
+    const normalMap = createRoundedNormalMap(LOGO_SVG, {
+      bounds: [box.min.x, box.min.y, box.max.x, box.max.y],
+      ...ROUNDING,
+    });
+    capMaterial.normalMap = normalMap;
     for (const g of geometries) g.translate(-center.x, -center.y, -depth / 2);
     logo.scale.set(1, -1, 1); // SVG y axis points down
 
@@ -289,6 +301,8 @@ export default function MetalLogo() {
       ro.disconnect();
       geometries.forEach((g) => g.dispose());
       material.dispose();
+      capMaterial.dispose();
+      normalMap.dispose();
       envTex.dispose();
       pmrem.dispose();
       renderer.dispose();
@@ -304,4 +318,20 @@ export default function MetalLogo() {
       style={{ position: "absolute", inset: 0, touchAction: "none", cursor: "grab" }}
     />
   );
+}
+
+/**
+ * Smooth the shading across the bevel and side-wall segments so they read as
+ * one continuous curve instead of visible facets. Sharp corners (over 35°)
+ * stay crisp. The flat faces keep their own normals, because their triangles
+ * span the whole shape and would pick up a tilt from the edges.
+ */
+function smoothSides(geometry: THREE.BufferGeometry) {
+  const normal = geometry.getAttribute("normal") as THREE.BufferAttribute;
+  const faces = geometry.groups[0];
+  const faceNormals = normal.array.slice(faces.start * 3, (faces.start + faces.count) * 3);
+  toCreasedNormals(geometry, THREE.MathUtils.degToRad(35));
+  const smoothed = geometry.getAttribute("normal") as THREE.BufferAttribute;
+  (smoothed.array as Float32Array).set(faceNormals, faces.start * 3);
+  smoothed.needsUpdate = true;
 }

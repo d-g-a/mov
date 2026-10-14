@@ -89,7 +89,7 @@ export default function MetalLogo() {
     const logo = new THREE.Group();
     const geometries: THREE.BufferGeometry[] = [];
     for (const path of svg.paths) {
-      for (const shape of path.toShapes()) {
+      for (const shape of SVGLoader.createShapes(path)) {
         const g = new THREE.ExtrudeGeometry(shape, extrude);
         geometries.push(g);
         logo.add(new THREE.Mesh(g, material));

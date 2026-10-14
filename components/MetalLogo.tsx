@@ -9,7 +9,7 @@ import { LOGO_SVG } from "@/lib/logo";
 import { createRoundedNormalMap } from "@/lib/roundedNormalMap";
 
 /**
- * Chrome-extruded LA MOVIDA logo on a black stage.
+ * Chrome-extruded LAMOVIDA logo on a black stage.
  *
  * Interaction
  * - Mouse hover: the logo turns to face the cursor and a light follows it,
@@ -320,7 +320,7 @@ export default function MetalLogo() {
     <div
       ref={mountRef}
       role="img"
-      aria-label="LA MOVIDA logo in chrome. Move, drag or tap to play with it."
+      aria-label="LAMOVIDA logo in chrome. Move, drag or tap to play with it."
       style={{ position: "absolute", inset: 0, touchAction: "none", cursor: "grab" }}
     />
   );

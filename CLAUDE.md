@@ -1,6 +1,6 @@
-# LA MOVIDA — site
+# LAMOVIDA — site
 
-Next.js (App Router) site for LA MOVIDA, a Latin electronic music collective in Paris. The landing page is the collective's logo extruded in chrome with three.js.
+Next.js (App Router) site for LAMOVIDA, a Latin electronic music collective in Paris. The landing page is the collective's logo extruded in chrome with three.js.
 
 ## Git workflow (required)
 

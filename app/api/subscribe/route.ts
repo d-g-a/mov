@@ -9,7 +9,8 @@ import { createHash } from "node:crypto";
  * - MAILCHIMP_DOUBLE_OPT_IN "true" sends a confirmation email first; otherwise people are added directly
  * - MAILCHIMP_TAG           optional tag added to each signup, e.g. "website"
  *
- * Responds with { status: "pending" | "subscribed" | "already" | "unsubscribed" } or { error: string }.
+ * Responds with { status: "pending" | "subscribed" | "already" | "unsubscribed" }
+ * or { error: "invalid_email" | "forgotten" | "not_configured" | "upstream" }.
  */
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,12 +57,19 @@ export async function POST(request: Request) {
       headers,
       body: JSON.stringify({ email_address: email, status_if_new: doubleOptIn ? "pending" : "subscribed" }),
     });
-    let member = (await res.json()) as { status?: string; title?: string };
+    let member = (await res.json()) as { status?: string; title?: string; detail?: string };
 
     if (!res.ok) {
-      // Mailchimp rejects fake-looking or blocked addresses with 400 "Invalid Resource"
-      if (res.status === 400) return Response.json({ error: "invalid_email" }, { status: 400 });
-      console.error("Mailchimp error", res.status, member.title);
+      // Mailchimp's reason is in title/detail; log it so it shows in the host's logs
+      console.error("Mailchimp error", res.status, member.title, member.detail);
+      if (res.status === 400) {
+        // Address looks fake or malformed to Mailchimp
+        if (member.title === "Invalid Resource") return Response.json({ error: "invalid_email" }, { status: 400 });
+        // Permanently deleted from the audience: Mailchimp won't let the API re-add it
+        if (member.title === "Forgotten Email Not Subscribed") return Response.json({ error: "forgotten" }, { status: 409 });
+        // Unsubscribed earlier and held for compliance
+        if (member.title === "Member In Compliance State") return Response.json({ status: "unsubscribed" });
+      }
       return Response.json({ error: "upstream" }, { status: 502 });
     }
 

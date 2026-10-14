@@ -11,6 +11,7 @@ const MESSAGES: Record<string, string> = {
   already: "You’re already on the list.",
   unsubscribed: "This email unsubscribed earlier, so it can’t be re-added here.",
   invalid_email: "That email doesn’t look right.",
+  forgotten: "This email was removed from our list, so it can’t be re-added here.",
   default: "Couldn’t sign you up. Try again in a moment.",
 };
 

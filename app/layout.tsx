@@ -3,7 +3,7 @@ import "./globals.css";
 
 const name = "LAMOVIDA";
 const description = "Musiques électroniques d'Amérique Latine";
-const title = `${name} | ${description}`;
+const title = name;
 
 // The share image comes from app/opengraph-image.png and app/twitter-image.png
 // (Next.js adds those tags itself). On Vercel the absolute URLs use the

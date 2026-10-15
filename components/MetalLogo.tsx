@@ -25,6 +25,8 @@ const TILT_X = 0.35; // max pitch toward pointer
 const SPIN_PER_PX = 0.012; // drag sensitivity
 const FRICTION = 2.2; // spin velocity decay per second
 const IDLE_AFTER = 3; // seconds without input before idle sway
+const CLEAR_BELOW = 280; // px kept free under the logo for the newsletter form and footer icons
+const MIN_TOP = 24; // px kept free above the logo when it has to move up
 const WARM_TINT = 0xffc4d9; // pale pink: reflected room lights + key light
 const CURSOR_TINT = 0xffa3c6; // a touch stronger: cursor light + click flash
 const ROUNDING = { radius: 14, height: 3.5 }; // rounded profile of the faces, in SVG units
@@ -135,15 +137,23 @@ export default function MetalLogo() {
       renderer.setSize(w, h);
       camera.aspect = w / h;
       const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-      const byWidth = size.x / 2 / 0.8 / (tanHalf * camera.aspect); // logo fills ~80% of width
-      const byHeight = size.y / 2 / 0.45 / tanHalf; // and at most ~45% of height
+      const above = Math.max(h - CLEAR_BELOW, h / 2); // room above the form and footer
+      // Logo fills ~80% of the width and at most ~45% of the height; it only
+      // shrinks below that if it can't fit in the room above the form.
+      const maxHalfPx = Math.min(0.45 * h, above - MIN_TOP) / 2;
+      const byWidth = size.x / 2 / 0.8 / (tanHalf * camera.aspect);
+      const byHeight = size.y / 2 / (maxHalfPx / (h / 2)) / tanHalf;
       const distance = Math.max(byWidth, byHeight);
-      camera.position.set(0, 0, distance);
-      camera.lookAt(0, 0, 0);
-      camera.updateProjectionMatrix();
-      // Expose the logo's on-screen half height so the page can place things below it
       const halfHeightPx = (size.y / 2 / (tanHalf * distance)) * (h / 2);
-      mount.parentElement?.style.setProperty("--logo-half-height", `${halfHeightPx}px`);
+      // Centered on screen, unless that would push it into the form: then move it up
+      const centerPx = Math.min(h / 2, above - halfHeightPx);
+      const worldPerPx = (2 * tanHalf * distance) / h;
+      const offsetY = (h / 2 - centerPx) * worldPerPx;
+      camera.position.set(0, -offsetY, distance);
+      camera.lookAt(0, -offsetY, 0);
+      camera.updateProjectionMatrix();
+      // Expose where the logo ends so the page can place the form below it
+      mount.parentElement?.style.setProperty("--logo-bottom", `${centerPx + halfHeightPx}px`);
     };
     fitCamera();
     const ro = new ResizeObserver(fitCamera);
@@ -279,7 +289,7 @@ export default function MetalLogo() {
       // Cursor light: sits in front of the logo where the pointer is
       const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * (camera.position.z - 420);
       const halfW = halfH * camera.aspect;
-      lightTarget.set(pointer.x * halfW, -pointer.y * halfH, 420);
+      lightTarget.set(pointer.x * halfW, camera.position.y - pointer.y * halfH, 420);
       cursorLight.position.lerp(lightTarget, 1 - Math.exp(-10 * dt));
       const wantIntensity = (pointer.active && !idle ? 2.2 : 0) + flash * 6;
       cursorLight.intensity = damp(cursorLight.intensity, wantIntensity, 8, dt);

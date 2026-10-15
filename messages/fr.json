@@ -10,7 +10,7 @@
     "label": "Adresse e-mail pour la newsletter LAMOVIDA",
     "placeholder": "Newsletter",
     "submit": "S’inscrire",
-    "consent": "Restez au courant des soirées LAMOVIDA",
+    "consent": "J'accepte de recevoir les invitations aux soirées et actualités de LAMOVIDA par e-mail.",
     "status": {
       "pending": "Vérifiez votre boîte mail pour confirmer.",
       "subscribed": "C’est noté, vous êtes sur la liste.",

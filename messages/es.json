@@ -10,7 +10,7 @@
     "label": "Correo electrónico para la newsletter de LAMOVIDA",
     "placeholder": "Newsletter",
     "submit": "Suscribirse",
-    "consent": "Entérate de las fiestas de LAMOVIDA",
+    "consent": "Acepto recibir invitaciones a fiestas y novedades de LAMOVIDA por correo electrónico.",
     "status": {
       "pending": "Revisa tu correo para confirmar.",
       "subscribed": "¡Listo! Ya estás en la lista.",

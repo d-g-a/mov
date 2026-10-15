@@ -37,12 +37,13 @@ export default function LanguagePrompt() {
 
   return (
     <div className={styles.backdrop}>
-      <div className={styles.panel} role="dialog" aria-modal="true" aria-labelledby="language-prompt-title">
-        <h2 id="language-prompt-title" className={styles.title}>
-          <span lang="fr">Choisissez votre langue</span>
-          <span lang="en">Choose your language</span>
-          <span lang="es">Elige tu idioma</span>
-        </h2>
+      {/* Only the three languages are shown; the name is for screen readers */}
+      <div
+        className={styles.panel}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Choisissez votre langue · Choose your language · Elige tu idioma"
+      >
         <div className={styles.options}>
           {LANGUAGES.map((l) => (
             <button

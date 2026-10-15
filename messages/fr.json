@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "description": "Musiques électroniques d'Amérique Latine",
+    "intro": "Musiques électroniques d'Amérique Latine. Collectif, Paris."
+  },
+  "logo": {
+    "label": "Logo LAMOVIDA en chrome. Bougez, faites glisser ou touchez pour jouer avec."
+  },
+  "newsletter": {
+    "label": "Adresse e-mail pour la newsletter LAMOVIDA",
+    "placeholder": "Newsletter",
+    "submit": "S’inscrire",
+    "consent": "Restez au courant des soirées LAMOVIDA",
+    "status": {
+      "pending": "Vérifiez votre boîte mail pour confirmer.",
+      "subscribed": "C’est noté, vous êtes sur la liste.",
+      "already": "Vous êtes déjà sur la liste.",
+      "unsubscribed": "Cette adresse s’est désinscrite auparavant, elle ne peut pas être réinscrite ici.",
+      "invalid_email": "Cette adresse e-mail ne semble pas valide.",
+      "consent_required": "Cochez la case pour recevoir nos infos.",
+      "default": "Inscription impossible pour le moment. Réessayez dans un instant."
+    }
+  },
+  "language": {
+    "label": "Langue"
+  }
+}

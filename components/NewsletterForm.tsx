@@ -1,21 +1,20 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import styles from "./NewsletterForm.module.css";
 
 type State = "idle" | "sending" | "done" | "error";
 
-const MESSAGES: Record<string, string> = {
-  pending: "Check your inbox to confirm.",
-  subscribed: "You’re on the list.",
-  already: "You’re already on the list.",
-  unsubscribed: "This email unsubscribed earlier, so it can’t be re-added here.",
-  invalid_email: "That email doesn’t look right.",
-  consent_required: "Tick the box to receive updates.",
-  default: "Couldn’t sign you up. Try again in a moment.",
-};
+// Response codes from /api/subscribe that have their own message (messages/*.json → newsletter.status)
+const STATUS_KEYS = ["pending", "subscribed", "already", "unsubscribed", "invalid_email", "consent_required"];
 
 export default function NewsletterForm() {
+  const t = useTranslations("newsletter");
+  const locale = useLocale();
+  const statusMessage = (code?: string) =>
+    t(`status.${code && STATUS_KEYS.includes(code) ? code : "default"}`);
+
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
   // GDPR: explicit opt-in, never pre-ticked. Sending stays blocked until it's ticked.
@@ -32,28 +31,28 @@ export default function NewsletterForm() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.get("email"), company: data.get("company"), consent }),
+        body: JSON.stringify({ email: data.get("email"), company: data.get("company"), consent, language: locale }),
       });
       const json = (await res.json()) as { status?: string; error?: string };
       if (res.ok && json.status) {
         setState("done");
-        setMessage(MESSAGES[json.status] ?? MESSAGES.subscribed);
+        setMessage(statusMessage(json.status));
         form.reset();
         setConsent(false);
       } else {
         setState("error");
-        setMessage(MESSAGES[json.error ?? ""] ?? MESSAGES.default);
+        setMessage(statusMessage(json.error));
       }
     } catch {
       setState("error");
-      setMessage(MESSAGES.default);
+      setMessage(statusMessage());
     }
   }
 
   return (
     <form className={styles.form} onSubmit={onSubmit} data-state={state}>
       <label htmlFor="newsletter-email" className={styles.srOnly}>
-        Email address for the LAMOVIDA newsletter
+        {t("label")}
       </label>
       <div className={styles.field}>
         <input
@@ -63,14 +62,14 @@ export default function NewsletterForm() {
           required
           autoComplete="email"
           inputMode="email"
-          placeholder="Newsletter"
+          placeholder={t("placeholder")}
           className={styles.input}
           disabled={state === "sending"}
         />
         <button
           type="submit"
           className={styles.submit}
-          aria-label="Subscribe"
+          aria-label={t("submit")}
           disabled={state === "sending" || !consent}
         >
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
@@ -86,7 +85,7 @@ export default function NewsletterForm() {
           onChange={(e) => setConsent(e.target.checked)}
           disabled={state === "sending"}
         />
-        <span>Stay in the loop: LAMOVIDA party updates</span>
+        <span>{t("consent")}</span>
       </label>
       {/* Honeypot for bots: hidden from people and screen readers */}
       <input name="company" tabIndex={-1} autoComplete="off" className={styles.honeypot} aria-hidden="true" />

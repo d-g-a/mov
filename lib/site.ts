@@ -1,7 +1,7 @@
 // Shared site facts for metadata, the sitemap and structured data.
 
 export const SITE_NAME = "LAMOVIDA";
-export const SITE_DESCRIPTION = "Musiques électroniques d'Amérique Latine";
+// The description is translated: see "meta.description" in messages/*.json.
 
 // Canonical address. Set SITE_URL in Vercel once the site has its own domain
 // (e.g. https://lamovida.paris); until then Vercel's production domain is used.

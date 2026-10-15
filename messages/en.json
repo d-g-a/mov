@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "description": "Latin American electronic music",
+    "intro": "Latin American electronic music. Collective, Paris."
+  },
+  "logo": {
+    "label": "LAMOVIDA logo in chrome. Move, drag or tap to play with it."
+  },
+  "newsletter": {
+    "label": "Email address for the LAMOVIDA newsletter",
+    "placeholder": "Newsletter",
+    "submit": "Subscribe",
+    "consent": "Stay in the loop: LAMOVIDA party updates",
+    "status": {
+      "pending": "Check your inbox to confirm.",
+      "subscribed": "You’re on the list.",
+      "already": "You’re already on the list.",
+      "unsubscribed": "This email unsubscribed earlier, so it can’t be re-added here.",
+      "invalid_email": "That email doesn’t look right.",
+      "consent_required": "Tick the box to receive updates.",
+      "default": "Couldn’t sign you up. Try again in a moment."
+    }
+  },
+  "language": {
+    "label": "Language"
+  }
+}

@@ -9,7 +9,8 @@ import { createHash } from "node:crypto";
  * - MAILCHIMP_DOUBLE_OPT_IN "true" sends a confirmation email first; otherwise people are added directly
  * - MAILCHIMP_TAG           optional tag added to each signup, e.g. "website"
  *
- * Body: { email, consent: true } (consent is the GDPR opt-in checkbox; required).
+ * Body: { email, consent: true, language? } (consent is the GDPR opt-in checkbox; required;
+ * language is the site language, "fr" | "en" | "es", stored on the Mailchimp contact).
  * Responds with { status: "pending" | "subscribed" | "already" | "unsubscribed" } or { error: string }.
  */
 
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "not_configured" }, { status: 503 });
   }
 
-  let body: { email?: unknown; company?: unknown; consent?: unknown };
+  let body: { email?: unknown; company?: unknown; consent?: unknown; language?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
   // Single opt-in by default. The audience's "double opt-in" setting in Mailchimp
   // only affects Mailchimp's hosted forms; via the API, the status we send decides.
   const doubleOptIn = process.env.MAILCHIMP_DOUBLE_OPT_IN === "true";
+  const language = ["fr", "en", "es"].includes(body.language as string) ? (body.language as string) : undefined;
   const memberUrl = `https://${dataCenter}.api.mailchimp.com/3.0/lists/${audienceId}/members/${createHash("md5").update(email).digest("hex")}`;
   const headers = {
     Authorization: `Basic ${Buffer.from(`lamovida:${apiKey}`).toString("base64")}`,
@@ -60,7 +62,12 @@ export async function POST(request: Request) {
     const res = await fetch(memberUrl, {
       method: "PUT",
       headers,
-      body: JSON.stringify({ email_address: email, status_if_new: doubleOptIn ? "pending" : "subscribed" }),
+      body: JSON.stringify({
+        email_address: email,
+        status_if_new: doubleOptIn ? "pending" : "subscribed",
+        // Contact language, so campaigns can be sent per language
+        ...(language ? { language } : {}),
+      }),
     });
     let member = (await res.json()) as { status?: string; title?: string };
 

@@ -16,14 +16,15 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-// The share image comes from app/[locale]/opengraph-image.png and twitter-image.png
-// (Next.js adds those tags itself). Absolute URLs, the canonical link and the
-// hreflang alternates use SITE_URL (see lib/site.ts).
+// Absolute URLs (canonical, hreflang alternates, share image) use SITE_URL
+// (see lib/site.ts). The share image is public/share-image.png; its
+// description is translated (meta.shareAlt).
 export async function generateMetadata({ params }: Omit<Props, "children">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "meta" });
   const description = t("description");
+  const shareImage = { url: "/share-image.png", width: 1200, height: 630, type: "image/png", alt: t("shareAlt") };
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -47,8 +48,9 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
       url: `/${locale}`,
       locale: OG_LOCALE[locale],
       alternateLocale: routing.locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
+      images: [shareImage],
     },
-    twitter: { card: "summary_large_image", title: SITE_NAME, description },
+    twitter: { card: "summary_large_image", title: SITE_NAME, description, images: [shareImage] },
   };
 }
 

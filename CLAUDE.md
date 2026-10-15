@@ -19,7 +19,7 @@ npm run build    # run before pushing; it also typechecks
 
 ## Layout
 
-- `app/[locale]/` — the page, its layout (the real root layout with `<html lang>`, metadata, hreflang) and the share images. `app/layout.tsx` only passes children through.
+- `app/[locale]/` — the page and its layout (the real root layout with `<html lang>`, metadata, hreflang). The share image is `public/share-image.png`; its description is translated (`meta.shareAlt`). `app/layout.tsx` only passes children through.
 - **Languages (next-intl):** French (default), English, Spanish at `/fr`, `/en`, `/es`. Config in `i18n/` (`routing.ts`, `navigation.ts`, `request.ts`), locale routing in `proxy.ts` (Next 16's middleware). Every user-facing string goes in `messages/{fr,en,es}.json`; keep the three files in sync. `components/LanguageSwitcher.tsx` is the globe menu (top right); `components/LanguagePrompt.tsx` asks for a language on the first visit (remembered with cookies, see `lib/languages.ts`).
 - `components/MetalLogo.tsx` — three.js scene, chrome material, lighting and pointer interaction. Tuning constants (tilt, spin, friction, idle delay, light tints) are at the top.
 - `lib/site.ts` — site name, description, canonical `SITE_URL` (env `SITE_URL`, else Vercel's production domain) and social links. Used by the metadata in `app/[locale]/layout.tsx`, the JSON-LD structured data in `app/[locale]/page.tsx`, `app/robots.ts` and `app/sitemap.ts`.

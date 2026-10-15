@@ -10,7 +10,7 @@
     "label": "Email address for the LAMOVIDA newsletter",
     "placeholder": "Newsletter",
     "submit": "Subscribe",
-    "consent": "Stay in the loop: LAMOVIDA party updates",
+    "consent": "I agree to receive party invites and updates from LAMOVIDA by email.",
     "status": {
       "pending": "Check your inbox to confirm.",
       "subscribed": "You’re on the list.",

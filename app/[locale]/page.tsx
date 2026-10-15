@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import MetalLogo from "@/components/MetalLogo";
 import NewsletterForm from "@/components/NewsletterForm";
 import styles from "./page.module.css";
-import { SITE_NAME, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
+import { SITE_NAME, SITE_SLOGAN, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -22,7 +22,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         alternateName: ["LA MOVIDA", "LAMOVIDA Paris"],
         url: `${SITE_URL}/`,
         logo: `${SITE_URL}/lamovida-logo.png`,
-        description: t("description"),
+        description: SITE_SLOGAN,
         address: { "@type": "PostalAddress", addressLocality: "Paris", addressCountry: "FR" },
         sameAs: [SOCIAL_LINKS.instagram, SOCIAL_LINKS.soundcloud],
       },
@@ -42,7 +42,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     <main className={styles.main}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <h1 className={styles.srOnly}>LAMOVIDA</h1>
-      <p className={styles.srOnly}>{t("intro")}</p>
+      <p className={styles.srOnly}>
+        <span lang="fr">{SITE_SLOGAN}</span>. {t("intro")}
+      </p>
       <MetalLogo label={tLogo("label")} />
       <NewsletterForm />
       <footer className={styles.footer}>

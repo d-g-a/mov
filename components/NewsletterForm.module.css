@@ -94,7 +94,7 @@
   font-size: 12px;
   line-height: 1.45;
   letter-spacing: 0.02em;
-  text-align: left;
+  text-align: center;
   text-wrap: pretty; /* avoid a lone word on the last line */
   cursor: pointer;
   user-select: none;

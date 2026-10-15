@@ -21,6 +21,7 @@ npm run build    # run before pushing; it also typechecks
 
 - `app/` — layout, page and global styles.
 - `components/MetalLogo.tsx` — three.js scene, chrome material, lighting and pointer interaction. Tuning constants (tilt, spin, friction, idle delay, light tints) are at the top.
+- `lib/site.ts` — site name, description, canonical `SITE_URL` (env `SITE_URL`, else Vercel's production domain) and social links. Used by the metadata in `app/layout.tsx`, the JSON-LD structured data in `app/page.tsx`, `app/robots.ts` and `app/sitemap.ts`.
 - `lib/logo.ts` — the logo SVG as a string, parsed at runtime. Keep it in sync with `public/la-movida-logo.svg`.
 - `components/NewsletterForm.tsx` — the newsletter input under the logo. It's placed with `--logo-bottom`, which `MetalLogo` sets. On short screens `MetalLogo` moves the logo up (and only then shrinks it) to keep `CLEAR_BELOW` px free for the form and footer.
 - `app/api/subscribe/route.ts` — adds signups to the Mailchimp audience. Needs `MAILCHIMP_API_KEY` and `MAILCHIMP_AUDIENCE_ID` (see `.env.example`); without them it returns 503. Signups are single opt-in (added as `subscribed`) unless `MAILCHIMP_DOUBLE_OPT_IN=true`. GDPR: the form has an unticked opt-in checkbox ("Stay in the loop: …") that must be ticked to send, and the route rejects any request without `consent: true`. Never commit the API key; it lives in `.env.local` and the host's environment settings.

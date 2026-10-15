@@ -86,7 +86,7 @@ export default function NewsletterForm() {
           onChange={(e) => setConsent(e.target.checked)}
           disabled={state === "sending"}
         />
-        <span>Send me updates on parties</span>
+        <span>Stay in the loop: LAMOVIDA party dates, lineups and presale access, straight to your inbox.</span>
       </label>
       {/* Honeypot for bots: hidden from people and screen readers */}
       <input name="company" tabIndex={-1} autoComplete="off" className={styles.honeypot} aria-hidden="true" />

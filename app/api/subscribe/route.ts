@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
  * - MAILCHIMP_DOUBLE_OPT_IN "true" sends a confirmation email first; otherwise people are added directly
  * - MAILCHIMP_TAG           optional tag added to each signup, e.g. "website"
  *
+ * Body: { email, consent: true } (consent is the GDPR opt-in checkbox; required).
  * Responds with { status: "pending" | "subscribed" | "already" | "unsubscribed" } or { error: string }.
  */
 
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "not_configured" }, { status: 503 });
   }
 
-  let body: { email?: unknown; company?: unknown };
+  let body: { email?: unknown; company?: unknown; consent?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -32,6 +33,11 @@ export async function POST(request: Request) {
   // Honeypot: real visitors never see or fill this field
   if (typeof body.company === "string" && body.company !== "") {
     return Response.json({ status: "subscribed" });
+  }
+
+  // GDPR: only subscribe people who ticked the opt-in box
+  if (body.consent !== true) {
+    return Response.json({ error: "consent_required" }, { status: 400 });
   }
 
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";

@@ -23,7 +23,7 @@ npm run build    # run before pushing; it also typechecks
 - `components/MetalLogo.tsx` — three.js scene, chrome material, lighting and pointer interaction. Tuning constants (tilt, spin, friction, idle delay, light tints) are at the top.
 - `lib/logo.ts` — the logo SVG as a string, parsed at runtime. Keep it in sync with `public/la-movida-logo.svg`.
 - `components/NewsletterForm.tsx` — the newsletter input under the logo. It's placed with `--logo-half-height`, which `MetalLogo` sets.
-- `app/api/subscribe/route.ts` — adds signups to the Mailchimp audience. Needs `MAILCHIMP_API_KEY` and `MAILCHIMP_AUDIENCE_ID` (see `.env.example`); without them it returns 503. Signups are single opt-in (added as `subscribed`) unless `MAILCHIMP_DOUBLE_OPT_IN=true`. Never commit the API key; it lives in `.env.local` and the host's environment settings.
+- `app/api/subscribe/route.ts` — adds signups to the Mailchimp audience. Needs `MAILCHIMP_API_KEY` and `MAILCHIMP_AUDIENCE_ID` (see `.env.example`); without them it returns 503. Signups are single opt-in (added as `subscribed`) unless `MAILCHIMP_DOUBLE_OPT_IN=true`. GDPR: the form has an unticked "Send me updates on parties" checkbox that must be ticked to send, and the route rejects any request without `consent: true`. Never commit the API key; it lives in `.env.local` and the host's environment settings.
 
 ## Notes
 

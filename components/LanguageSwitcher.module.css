@@ -1,0 +1,60 @@
+.switcher {
+  position: fixed;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.switcher:hover,
+.switcher:focus-within {
+  color: var(--fg);
+}
+
+.switcher select {
+  appearance: none;
+  padding: 0 14px 0 0;
+  margin-right: -10px; /* chevron sits in the select's padding */
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.switcher select:focus-visible {
+  outline: 1px solid rgba(230, 232, 236, 0.4);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.switcher option {
+  background: #000;
+  color: var(--fg);
+}
+
+.chevron {
+  pointer-events: none;
+}
+
+.switcher[data-pending] {
+  opacity: 0.5;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

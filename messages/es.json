@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "description": "Música electrónica latinoamericana",
+    "intro": "Música electrónica latinoamericana. Colectivo, París."
+  },
+  "logo": {
+    "label": "Logo de LAMOVIDA en cromo. Mueve, arrastra o toca para jugar con él."
+  },
+  "newsletter": {
+    "label": "Correo electrónico para la newsletter de LAMOVIDA",
+    "placeholder": "Newsletter",
+    "submit": "Suscribirse",
+    "consent": "Entérate de las fiestas de LAMOVIDA",
+    "status": {
+      "pending": "Revisa tu correo para confirmar.",
+      "subscribed": "¡Listo! Ya estás en la lista.",
+      "already": "Ya estás en la lista.",
+      "unsubscribed": "Este correo se dio de baja antes, así que no se puede volver a añadir aquí.",
+      "invalid_email": "Ese correo no parece válido.",
+      "consent_required": "Marca la casilla para recibir novedades.",
+      "default": "No pudimos suscribirte. Inténtalo de nuevo en un momento."
+    }
+  },
+  "language": {
+    "label": "Idioma"
+  }
+}

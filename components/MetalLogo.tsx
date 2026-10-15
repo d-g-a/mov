@@ -32,7 +32,7 @@ const CURSOR_TINT = 0xffa3c6; // a touch stronger: cursor light + click flash
 const ROUNDING = { radius: 14, height: 3.5 }; // rounded profile of the faces, in SVG units
 const LETTER_ROUNDING = 0.25; // letters' rounding relative to the ring (1 = same)
 
-export default function MetalLogo() {
+export default function MetalLogo({ label }: { label: string }) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -330,7 +330,7 @@ export default function MetalLogo() {
     <div
       ref={mountRef}
       role="img"
-      aria-label="LAMOVIDA logo in chrome. Move, drag or tap to play with it."
+      aria-label={label}
       style={{ position: "absolute", inset: 0, touchAction: "none", cursor: "grab" }}
     />
   );

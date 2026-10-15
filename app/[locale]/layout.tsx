@@ -5,7 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import LanguagePrompt from "@/components/LanguagePrompt";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_SLOGAN, SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 const OG_LOCALE = { fr: "fr_FR", en: "en_GB", es: "es_ES" } as const;
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "meta" });
-  const description = t("description");
+  const description = SITE_SLOGAN; // same French slogan in every language
   const shareImage = { url: "/share-image.png", width: 1200, height: 630, type: "image/png", alt: t("shareAlt") };
 
   return {

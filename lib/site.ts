@@ -1,7 +1,8 @@
 // Shared site facts for metadata, the sitemap and structured data.
 
 export const SITE_NAME = "LAMOVIDA";
-// The description is translated: see "meta.description" in messages/*.json.
+// The project's slogan, used as the description in every language (it stays in French)
+export const SITE_SLOGAN = "Musiques électroniques d'Amérique Latine";
 
 // Canonical address. Set SITE_URL in Vercel once the site has its own domain
 // (e.g. https://lamovida.paris); until then Vercel's production domain is used.

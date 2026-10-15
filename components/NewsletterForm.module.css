@@ -87,6 +87,7 @@
 .consent {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 10px;
   margin-top: 12px;
   color: var(--muted);

@@ -1,40 +1,47 @@
+/* One pill holding the globe, the language name and the arrow, with even
+   padding on both sides. The outline belongs to the pill, not the select. */
 .switcher {
   position: fixed;
-  top: calc(16px + env(safe-area-inset-top, 0px));
-  right: calc(16px + env(safe-area-inset-right, 0px));
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: calc(12px + env(safe-area-inset-right, 0px));
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
   color: var(--muted);
   font-size: 13px;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.switcher:hover,
-.switcher:focus-within {
+.switcher:hover {
   color: var(--fg);
+  border-color: rgba(230, 232, 236, 0.22);
+}
+
+/* Keyboard focus: outline the whole pill */
+.switcher:has(select:focus-visible) {
+  color: var(--fg);
+  border-color: rgba(230, 232, 236, 0.5);
 }
 
 .switcher select {
+  -webkit-appearance: none;
   appearance: none;
-  padding: 0 14px 0 0;
-  margin-right: -10px; /* chevron sits in the select's padding */
+  margin: 0;
+  padding: 0 16px 0 0; /* room for the arrow, which sits over this padding */
   background: transparent;
   border: 0;
+  border-radius: 0;
+  outline: none;
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
   cursor: pointer;
-}
-
-.switcher select:focus-visible {
-  outline: 1px solid rgba(230, 232, 236, 0.4);
-  outline-offset: 4px;
-  border-radius: 2px;
 }
 
 .switcher option {
@@ -42,7 +49,10 @@
   color: var(--fg);
 }
 
+/* Drawn over the select's right padding, so clicking it opens the menu */
 .chevron {
+  flex: none;
+  margin-left: -20px;
   pointer-events: none;
 }
 
